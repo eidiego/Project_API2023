@@ -1,5 +1,6 @@
 package br.com.eidiego.api.resources;
 
+import br.com.eidiego.api.domain.User;
 import br.com.eidiego.api.domain.dto.UserDTO;
 import br.com.eidiego.api.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,21 @@ public class UserResource {
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}").buildAndExpand(service.create(obj)).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO obj) {
+        obj.setId(id);
+        User newObj = service.update(obj);
+        return ResponseEntity.ok().body(mapper.map(newObj, UserDTO.class));
+    }
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
